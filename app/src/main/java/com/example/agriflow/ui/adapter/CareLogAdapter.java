@@ -3,6 +3,7 @@ package com.example.agriflow.ui.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,11 +17,21 @@ import java.util.List;
 
 public class CareLogAdapter extends RecyclerView.Adapter<CareLogAdapter.CareLogViewHolder> {
 
+    public interface OnLogActionListener {
+        void onEditLog(CareLog log);
+        void onDeleteLog(CareLog log);
+    }
+
     private List<CareLog> logs = new ArrayList<>();
+    private OnLogActionListener actionListener;
 
     public void setLogs(List<CareLog> logs) {
         this.logs = logs != null ? logs : new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public void setOnLogActionListener(OnLogActionListener listener) {
+        this.actionListener = listener;
     }
 
     @NonNull
@@ -33,7 +44,7 @@ public class CareLogAdapter extends RecyclerView.Adapter<CareLogAdapter.CareLogV
     @Override
     public void onBindViewHolder(@NonNull CareLogViewHolder holder, int position) {
         CareLog log = logs.get(position);
-        holder.bind(log);
+        holder.bind(log, actionListener);
     }
 
     @Override
@@ -46,6 +57,8 @@ public class CareLogAdapter extends RecyclerView.Adapter<CareLogAdapter.CareLogV
         private final TextView tvName;
         private final TextView tvTime;
         private final TextView tvNote;
+        private final ImageButton btnEdit;
+        private final ImageButton btnDelete;
 
         public CareLogViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,9 +66,11 @@ public class CareLogAdapter extends RecyclerView.Adapter<CareLogAdapter.CareLogV
             tvName = itemView.findViewById(R.id.tv_action_name);
             tvTime = itemView.findViewById(R.id.tv_log_time);
             tvNote = itemView.findViewById(R.id.tv_log_note);
+            btnEdit = itemView.findViewById(R.id.btn_edit_log);
+            btnDelete = itemView.findViewById(R.id.btn_delete_log);
         }
 
-        public void bind(CareLog log) {
+        public void bind(CareLog log, OnLogActionListener listener) {
             if (log.getActionType() != null) {
                 tvEmoji.setText(log.getActionType().getIconEmoji());
                 tvName.setText(log.getActionType().getDisplayName());
@@ -65,6 +80,18 @@ public class CareLogAdapter extends RecyclerView.Adapter<CareLogAdapter.CareLogV
             }
             tvTime.setText(log.getRelativeTime());
             tvNote.setText(log.getNote() != null ? log.getNote() : "");
+
+            btnEdit.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onEditLog(log);
+                }
+            });
+
+            btnDelete.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onDeleteLog(log);
+                }
+            });
         }
     }
 }

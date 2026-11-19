@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tv_stats_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thống kê chu kỳ thu hoạch"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="19sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_stats_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/colorOnSurfaceVariant"
+        android:textSize="13sp"
+        tools:text="Khu Dừa • Chu kỳ tiêu chuẩn: 28 ngày/lứa" />
+
+    <!-- Card summary of Harvest status -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        app:cardBackgroundColor="@color/colorSurfaceVariant"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/dividerColor"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <!-- Due for Harvest -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="⏳ Đến kỳ thu hoạch:"
+                    android:textColor="#C62828"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_stats_due_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#C62828"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="12 cây (25%)" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/dividerColor" />
+
+            <!-- Harvested Recently -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🕒 Vừa thu gần đây (&lt;15 ngày):"
+                    android:textColor="#0277BD"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tv_stats_recent_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#0277BD"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="18 cây (37%)" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/dividerColor" />
+
+            <!-- Never Harvested -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="❓ Chưa từng thu hoạch:"
+                    android:textColor="#546E7A"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tv_stats_never_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#546E7A"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="18 cây (38%)" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Health Breakdown -->
+    <TextView
+        android:id="@+id/tv_stats_health_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/colorOnSurfaceVariant"
+        android:textSize="13sp"
+        tools:text="Sức khỏe: 🟢 42 Khỏe • 🟡 4 Cần chăm sóc • 🔴 2 Sâu bệnh" />
+
+    <!-- Button to select due trees directly -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_stats_select_due"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="⚡ Chọn ngay các cây đến kỳ thu"
+        android:textColor="#C62828"
+        app:icon="@drawable/ic_harvest"
+        app:iconGravity="textStart"
+        app:iconTint="#C62828" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_stats_toggle_view_mode"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Hiện số ngày thu hoạch trên ô"
+        app:icon="@drawable/ic_calendar"
+        app:iconGravity="textStart" />
+
+</LinearLayout>

@@ -13,6 +13,7 @@ public class Zone implements Serializable {
     private int rows;
     private int cols;
     private String defaultCrop;
+    private int harvestCycleDays = 30; // Chu kỳ thu hoạch định kỳ theo ngày (mặc định 30 ngày cho cây dừa/cây ăn trái)
     private long createdAt;
     private List<Cell> cells;
 
@@ -22,12 +23,17 @@ public class Zone implements Serializable {
     }
 
     public Zone(String id, String name, String description, int rows, int cols, String defaultCrop) {
+        this(id, name, description, rows, cols, defaultCrop, 30);
+    }
+
+    public Zone(String id, String name, String description, int rows, int cols, String defaultCrop, int harvestCycleDays) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.rows = rows;
         this.cols = cols;
         this.defaultCrop = defaultCrop;
+        this.harvestCycleDays = harvestCycleDays > 0 ? harvestCycleDays : 30;
         this.createdAt = System.currentTimeMillis();
         this.cells = new ArrayList<>();
         initializeCells();
@@ -166,6 +172,50 @@ public class Zone implements Serializable {
         return count;
     }
 
+    public int getHarvestCycleDays() {
+        return harvestCycleDays > 0 ? harvestCycleDays : 30;
+    }
+
+    public void setHarvestCycleDays(int harvestCycleDays) {
+        this.harvestCycleDays = harvestCycleDays > 0 ? harvestCycleDays : 30;
+    }
+
+    public int getHarvestedRecentlyCount(int withinDays) {
+        int count = 0;
+        long cutoff = System.currentTimeMillis() - withinDays * 86400000L;
+        for (Cell cell : getCells()) {
+            if (cell.getLastHarvested() > cutoff) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getDueForHarvestCount() {
+        int count = 0;
+        long cutoff = System.currentTimeMillis() - getHarvestCycleDays() * 86400000L;
+        for (Cell cell : getCells()) {
+            if (cell.getStatus() != CellStatus.DISABLED && cell.getStatus() != CellStatus.EMPTY) {
+                if (cell.getLastHarvested() > 0 && cell.getLastHarvested() <= cutoff) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public int getNeverHarvestedCount() {
+        int count = 0;
+        for (Cell cell : getCells()) {
+            if (cell.getStatus() != CellStatus.DISABLED && cell.getStatus() != CellStatus.EMPTY) {
+                if (cell.getLastHarvested() <= 0) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     public int getActivePlantCount() {
         return getHealthyCount() + getWarningCount() + getDiseasedCount();
     }
@@ -188,6 +238,7 @@ public class Zone implements Serializable {
         map.put("rows", rows);
         map.put("cols", cols);
         map.put("defaultCrop", defaultCrop);
+        map.put("harvestCycleDays", harvestCycleDays);
         map.put("createdAt", createdAt);
         return map;
     }
@@ -206,6 +257,9 @@ public class Zone implements Serializable {
         if (cObj instanceof Number) zone.setCols(((Number) cObj).intValue());
 
         zone.setDefaultCrop((String) map.get("defaultCrop"));
+
+        Object hcdObj = map.get("harvestCycleDays");
+        if (hcdObj instanceof Number) zone.setHarvestCycleDays(((Number) hcdObj).intValue());
 
         Object caObj = map.get("createdAt");
         if (caObj instanceof Number) zone.setCreatedAt(((Number) caObj).longValue());

@@ -1,0 +1,13 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Text files
+*.java text diff
+*.xml text diff
+*.gradle text diff
+*.kts text diff
+*.properties text diff
+*.md text diff
+*.json text diff
+*.txt text diff
+*.gitignore text diff

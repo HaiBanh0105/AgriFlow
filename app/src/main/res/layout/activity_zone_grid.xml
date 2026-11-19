@@ -24,7 +24,7 @@
             app:title="Sơ đồ lưới"
             app:titleTextColor="@color/colorOnSurface" />
 
-        <!-- Health Status Summary Bar -->
+        <!-- Health Status Summary Bar (Clickable to select all of status) -->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,6 +46,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_pill_badge"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:paddingStart="10dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="10dp"
@@ -61,6 +64,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/bg_pill_badge"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:paddingStart="10dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="10dp"
@@ -76,6 +82,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/bg_pill_badge"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:paddingStart="10dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="10dp"
@@ -91,6 +100,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/bg_pill_badge"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:paddingStart="10dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="10dp"
@@ -101,6 +113,181 @@
 
             </LinearLayout>
         </HorizontalScrollView>
+
+        <!-- Harvest Cycle Filters Bar -->
+        <HorizontalScrollView
+            android:id="@+id/scroll_harvest_filters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorSurfaceVariant"
+            android:paddingStart="12dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chip_filter_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill_badge"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp"
+                    android:text="🌴 Tất cả"
+                    android:textColor="@color/colorOnSurface"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/chip_filter_due"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_pill_badge"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp"
+                    android:text="⏳ Đến kỳ thu hoạch"
+                    android:textColor="#C62828"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/chip_filter_recent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_pill_badge"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp"
+                    android:text="🕒 Vừa thu (&lt;15d)"
+                    android:textColor="#0277BD"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/chip_filter_never"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_pill_badge"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp"
+                    android:text="❓ Chưa thu"
+                    android:textColor="#546E7A"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Active Multi-Select Mode Notification Banner -->
+        <LinearLayout
+            android:id="@+id/layout_multi_select_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#E3F2FD"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_check_box"
+                app:tint="#1976D2" />
+
+            <TextView
+                android:id="@+id/tv_mode_hint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="Chế độ chọn nhiều"
+                android:textColor="#0D47A1"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- Selector: Tap vs Brush -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggle_group_select_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                app:checkedButton="@id/btn_mode_tap"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_mode_tap"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="👆 Chạm"
+                    android:textSize="11sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_mode_brush"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="🖌️ Quét"
+                    android:textSize="11sp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_exit_multi_select"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:text="✕ Thoát"
+                android:textColor="#D32F2F"
+                android:textSize="11sp" />
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Main Grid Content Frame -->
@@ -199,9 +386,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minWidth="0dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
                         android:text="Tất cả"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_invert_selection"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="0dp"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
+                        android:text="Đảo"
                         android:textSize="12sp" />
 
                     <com.google.android.material.button.MaterialButton
@@ -210,14 +408,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minWidth="0dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
                         android:text="Bỏ chọn"
                         android:textColor="@color/status_diseased"
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!-- Bulk Action Buttons -->
+                <!-- Bulk Action Buttons - Row 1 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -242,14 +440,63 @@
                         style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="2dp"
                         android:layout_weight="1"
                         android:text="Bón phân"
                         android:textColor="@color/action_fertilize"
                         app:icon="@drawable/ic_fertilizer"
                         app:iconGravity="textStart"
                         app:iconTint="@color/action_fertilize" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_bulk_pesticide"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:text="Trừ sâu"
+                        android:textColor="@color/action_pesticide"
+                        app:icon="@drawable/ic_bug"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/action_pesticide" />
+
+                </LinearLayout>
+
+                <!-- Bulk Action Buttons - Row 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_bulk_harvest"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:text="Thu hoạch"
+                        android:textColor="@color/action_harvest"
+                        app:icon="@drawable/ic_harvest"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/action_harvest" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_bulk_plant"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="2dp"
+                        android:layout_weight="1"
+                        android:text="Gieo giống"
+                        android:textColor="@color/colorPrimary"
+                        app:icon="@drawable/ic_sprout"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/colorPrimary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_bulk_status"
@@ -259,10 +506,10 @@
                         android:layout_marginStart="4dp"
                         android:layout_weight="1"
                         android:text="Đổi TT"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/colorOnSurface"
                         app:icon="@drawable/ic_check"
                         app:iconGravity="textStart"
-                        app:iconTint="@color/colorPrimary" />
+                        app:iconTint="@color/colorOnSurface" />
 
                 </LinearLayout>
             </LinearLayout>

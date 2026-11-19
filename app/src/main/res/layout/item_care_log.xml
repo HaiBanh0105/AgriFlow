@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
-    <!-- Timeline dot & line -->
-    <LinearLayout
+    <!-- Emoji / Icon -->
+    <TextView
+        android:id="@+id/tv_action_emoji"
         android:layout_width="32dp"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_action_emoji"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            tools:text="💧" />
-    </LinearLayout>
+        android:textSize="18sp"
+        tools:text="💧" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -38,9 +33,8 @@
 
             <TextView
                 android:id="@+id/tv_action_name"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textColor="@color/colorOnSurface"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -50,6 +44,7 @@
                 android:id="@+id/tv_log_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="11sp"
                 tools:text="15 phút trước" />
@@ -62,7 +57,29 @@
             android:layout_marginTop="2dp"
             android:textColor="@color/colorOnSurfaceVariant"
             android:textSize="13sp"
-            tools:text="Tưới dung dịch dinh dưỡng AB nồng độ 800ppm" />
+            tools:text="Tưới dung dịch dinh dưỡng AB" />
     </LinearLayout>
+
+    <!-- Action buttons: Edit & Delete -->
+    <ImageButton
+        android:id="@+id/btn_edit_log"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Sửa nhật ký"
+        android:padding="6dp"
+        android:src="@drawable/ic_edit"
+        app:tint="@color/colorPrimary" />
+
+    <ImageButton
+        android:id="@+id/btn_delete_log"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Xóa nhật ký"
+        android:padding="6dp"
+        android:src="@drawable/ic_delete"
+        app:tint="@color/status_diseased" />
 
 </LinearLayout>

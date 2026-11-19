@@ -16,6 +16,7 @@ public class Cell {
     private String notes;
     private long lastWatered;
     private long lastFertilized;
+    private long lastHarvested;
     private List<CareLog> careLogs;
 
     public Cell() {
@@ -34,6 +35,7 @@ public class Cell {
         this.notes = "";
         this.lastWatered = System.currentTimeMillis() - 86400000L;
         this.lastFertilized = System.currentTimeMillis() - 86400000L * 3;
+        this.lastHarvested = 0L;
         this.careLogs = new ArrayList<>();
     }
 
@@ -117,6 +119,56 @@ public class Cell {
         this.lastFertilized = lastFertilized;
     }
 
+    public long getLastHarvested() {
+        return lastHarvested;
+    }
+
+    public void setLastHarvested(long lastHarvested) {
+        this.lastHarvested = lastHarvested;
+    }
+
+    public int getDaysSinceLastHarvest() {
+        if (lastHarvested <= 0) return -1;
+        long diff = System.currentTimeMillis() - lastHarvested;
+        return Math.max(0, (int) (diff / 86400000L));
+    }
+
+    public void recalculateMetricsFromLogs() {
+        if (careLogs == null) return;
+        long maxWater = 0;
+        long maxFertilize = 0;
+        long maxHarvest = 0;
+        for (CareLog log : careLogs) {
+            if (log.getActionType() == ActionType.WATER && log.getTimestamp() > maxWater) {
+                maxWater = log.getTimestamp();
+            } else if (log.getActionType() == ActionType.FERTILIZE && log.getTimestamp() > maxFertilize) {
+                maxFertilize = log.getTimestamp();
+            } else if (log.getActionType() == ActionType.HARVEST && log.getTimestamp() > maxHarvest) {
+                maxHarvest = log.getTimestamp();
+            }
+        }
+        if (maxWater > 0) this.lastWatered = maxWater;
+        if (maxFertilize > 0) this.lastFertilized = maxFertilize;
+        this.lastHarvested = maxHarvest; // 0 if none
+    }
+
+    public void removeCareLog(String logId) {
+        if (careLogs == null || logId == null) return;
+        careLogs.removeIf(l -> logId.equals(l.getId()));
+        recalculateMetricsFromLogs();
+    }
+
+    public void updateCareLog(CareLog updated) {
+        if (careLogs == null || updated == null) return;
+        for (int i = 0; i < careLogs.size(); i++) {
+            if (careLogs.get(i).getId().equals(updated.getId())) {
+                careLogs.set(i, updated);
+                break;
+            }
+        }
+        recalculateMetricsFromLogs();
+    }
+
     public List<CareLog> getCareLogs() {
         if (careLogs == null) {
             careLogs = new ArrayList<>();
@@ -126,13 +178,25 @@ public class Cell {
 
     public void setCareLogs(List<CareLog> careLogs) {
         this.careLogs = careLogs;
+        recalculateMetricsFromLogs();
     }
 
     public void addCareLog(CareLog log) {
+        if (log == null) return;
         if (careLogs == null) {
             careLogs = new ArrayList<>();
         }
+        for (CareLog existing : careLogs) {
+            if (existing.getId() != null && existing.getId().equals(log.getId())) {
+                return; // Prevent duplicate insertion of identical log
+            }
+        }
         careLogs.add(0, log);
+        if (log.getActionType() == ActionType.HARVEST) {
+            if (log.getTimestamp() > this.lastHarvested) {
+                this.lastHarvested = log.getTimestamp();
+            }
+        }
     }
 
     public String getCoordinateLabel() {
@@ -159,6 +223,7 @@ public class Cell {
         map.put("notes", notes);
         map.put("lastWatered", lastWatered);
         map.put("lastFertilized", lastFertilized);
+        map.put("lastHarvested", lastHarvested);
         return map;
     }
 
@@ -190,6 +255,9 @@ public class Cell {
 
         Object lfObj = map.get("lastFertilized");
         if (lfObj instanceof Number) cell.setLastFertilized(((Number) lfObj).longValue());
+
+        Object lhObj = map.get("lastHarvested");
+        if (lhObj instanceof Number) cell.setLastHarvested(((Number) lhObj).longValue());
 
         return cell;
     }

@@ -56,11 +56,14 @@ public class FarmGridView extends View {
     // Selection
     private final Set<String> selectedCellIds = new HashSet<>();
     private boolean isMultiSelectMode = false;
+    private boolean isBrushMode = false;
+    private boolean showHarvestInfo = false;
 
     // Paints
     private Paint cellBackgroundPaint;
     private Paint cellBorderPaint;
     private Paint selectedBorderPaint;
+    private Paint selectedOverlayPaint;
     private Paint headerBackgroundPaint;
     private Paint headerTextPaint;
     private Paint cellTitlePaint;
@@ -99,6 +102,10 @@ public class FarmGridView extends View {
         selectedBorderPaint.setStyle(Paint.Style.STROKE);
         selectedBorderPaint.setStrokeWidth(6f);
         selectedBorderPaint.setColor(Color.parseColor("#1976D2")); // Deep Blue selection
+
+        selectedOverlayPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        selectedOverlayPaint.setColor(Color.parseColor("#331976D2")); // 20% transparent blue tint
+        selectedOverlayPaint.setStyle(Paint.Style.FILL);
 
         headerBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         headerBackgroundPaint.setColor(Color.parseColor("#EEF2F0"));
@@ -158,14 +165,30 @@ public class FarmGridView extends View {
     }
 
     public void setMultiSelectMode(boolean multiSelectMode) {
-        isMultiSelectMode = multiSelectMode;
+        this.isMultiSelectMode = multiSelectMode;
         if (!multiSelectMode) {
+            this.isBrushMode = false;
             selectedCellIds.clear();
             if (selectionChangedListener != null) {
                 selectionChangedListener.onSelectionChanged(0);
             }
             invalidate();
         }
+    }
+
+    public boolean isBrushMode() {
+        return isBrushMode;
+    }
+
+    public void setBrushMode(boolean brushMode) {
+        this.isBrushMode = brushMode;
+        if (brushMode) {
+            this.isMultiSelectMode = true;
+        }
+    }
+
+    public int getSelectedCount() {
+        return selectedCellIds.size();
     }
 
     public List<Cell> getSelectedCells() {
@@ -187,11 +210,107 @@ public class FarmGridView extends View {
         invalidate();
     }
 
-    public void selectRow(int rowIndex) {
+    public void toggleCellSelection(Cell cell) {
+        if (cell == null) return;
+        if (selectedCellIds.contains(cell.getId())) {
+            selectedCellIds.remove(cell.getId());
+        } else {
+            selectedCellIds.add(cell.getId());
+        }
+        notifySelectionChanged();
+        invalidate();
+    }
+
+    public void toggleSelectRow(int rowIndex) {
         if (zone == null || rowIndex < 0 || rowIndex >= zone.getRows()) return;
+        isMultiSelectMode = true;
+        List<Cell> rowCells = new ArrayList<>();
+        boolean allSelected = true;
         for (int c = 0; c < zone.getCols(); c++) {
             Cell cell = zone.getCell(rowIndex, c);
-            if (cell != null && cell.getStatus() != CellStatus.DISABLED) {
+            if (cell != null) {
+                rowCells.add(cell);
+                if (!selectedCellIds.contains(cell.getId())) {
+                    allSelected = false;
+                }
+            }
+        }
+        if (rowCells.isEmpty()) return;
+        if (allSelected) {
+            for (Cell c : rowCells) {
+                selectedCellIds.remove(c.getId());
+            }
+        } else {
+            for (Cell c : rowCells) {
+                selectedCellIds.add(c.getId());
+            }
+        }
+        notifySelectionChanged();
+        invalidate();
+    }
+
+    public void toggleSelectColumn(int colIndex) {
+        if (zone == null || colIndex < 0 || colIndex >= zone.getCols()) return;
+        isMultiSelectMode = true;
+        List<Cell> colCells = new ArrayList<>();
+        boolean allSelected = true;
+        for (int r = 0; r < zone.getRows(); r++) {
+            Cell cell = zone.getCell(r, colIndex);
+            if (cell != null) {
+                colCells.add(cell);
+                if (!selectedCellIds.contains(cell.getId())) {
+                    allSelected = false;
+                }
+            }
+        }
+        if (colCells.isEmpty()) return;
+        if (allSelected) {
+            for (Cell c : colCells) {
+                selectedCellIds.remove(c.getId());
+            }
+        } else {
+            for (Cell c : colCells) {
+                selectedCellIds.add(c.getId());
+            }
+        }
+        notifySelectionChanged();
+        invalidate();
+    }
+
+    public void toggleSelectByStatus(CellStatus status) {
+        if (zone == null) return;
+        isMultiSelectMode = true;
+        List<Cell> matching = new ArrayList<>();
+        boolean allSelected = true;
+        for (Cell cell : zone.getCells()) {
+            if (cell.getStatus() == status) {
+                matching.add(cell);
+                if (!selectedCellIds.contains(cell.getId())) {
+                    allSelected = false;
+                }
+            }
+        }
+        if (matching.isEmpty()) return;
+        if (allSelected) {
+            for (Cell c : matching) {
+                selectedCellIds.remove(c.getId());
+            }
+        } else {
+            for (Cell c : matching) {
+                selectedCellIds.add(c.getId());
+            }
+        }
+        notifySelectionChanged();
+        invalidate();
+    }
+
+    public void invertSelection() {
+        if (zone == null) return;
+        isMultiSelectMode = true;
+        for (Cell cell : zone.getCells()) {
+            if (selectedCellIds.contains(cell.getId())) {
+                selectedCellIds.remove(cell.getId());
+            } else {
                 selectedCellIds.add(cell.getId());
             }
         }
@@ -199,33 +318,103 @@ public class FarmGridView extends View {
         invalidate();
     }
 
+    public void selectRow(int rowIndex) {
+        toggleSelectRow(rowIndex);
+    }
+
     public void selectColumn(int colIndex) {
-        if (zone == null || colIndex < 0 || colIndex >= zone.getCols()) return;
-        for (int r = 0; r < zone.getRows(); r++) {
-            Cell cell = zone.getCell(r, colIndex);
-            if (cell != null && cell.getStatus() != CellStatus.DISABLED) {
-                selectedCellIds.add(cell.getId());
-            }
-        }
-        notifySelectionChanged();
-        invalidate();
+        toggleSelectColumn(colIndex);
     }
 
     public void selectAll() {
         if (zone == null) return;
+        isMultiSelectMode = true;
         for (Cell cell : zone.getCells()) {
-            if (cell.getStatus() != CellStatus.DISABLED) {
-                selectedCellIds.add(cell.getId());
-            }
+            selectedCellIds.add(cell.getId());
         }
         notifySelectionChanged();
         invalidate();
+    }
+
+    @Nullable
+    public Cell getCellAt(float screenX, float screenY) {
+        if (zone == null) return null;
+        float gridX = (screenX - posX) / scaleFactor;
+        float gridY = (screenY - posY) / scaleFactor;
+
+        if (gridX >= headerSize && gridY >= headerSize) {
+            int col = (int) ((gridX - headerSize) / (baseCellSize + cellMargin));
+            int row = (int) ((gridY - headerSize) / (baseCellSize + cellMargin));
+
+            if (row >= 0 && row < zone.getRows() && col >= 0 && col < zone.getCols()) {
+                float cellLeft = headerSize + col * (baseCellSize + cellMargin);
+                float cellTop = headerSize + row * (baseCellSize + cellMargin);
+                if (gridX >= cellLeft && gridX <= cellLeft + baseCellSize &&
+                        gridY >= cellTop && gridY <= cellTop + baseCellSize) {
+                    return zone.getCell(row, col);
+                }
+            }
+        }
+        return null;
     }
 
     private void notifySelectionChanged() {
         if (selectionChangedListener != null) {
             selectionChangedListener.onSelectionChanged(selectedCellIds.size());
         }
+    }
+
+    public boolean isShowHarvestInfo() {
+        return showHarvestInfo;
+    }
+
+    public void setShowHarvestInfo(boolean showHarvestInfo) {
+        this.showHarvestInfo = showHarvestInfo;
+        invalidate();
+    }
+
+    public void selectDueForHarvest() {
+        if (zone == null) return;
+        isMultiSelectMode = true;
+        selectedCellIds.clear();
+        int cycle = zone.getHarvestCycleDays();
+        for (Cell cell : zone.getCells()) {
+            if (cell.getStatus() != CellStatus.DISABLED && cell.getStatus() != CellStatus.EMPTY) {
+                if (cell.getLastHarvested() > 0 && cell.getDaysSinceLastHarvest() >= cycle) {
+                    selectedCellIds.add(cell.getId());
+                }
+            }
+        }
+        notifySelectionChanged();
+        invalidate();
+    }
+
+    public void selectRecentlyHarvested(int withinDays) {
+        if (zone == null) return;
+        isMultiSelectMode = true;
+        selectedCellIds.clear();
+        for (Cell cell : zone.getCells()) {
+            if (cell.getLastHarvested() > 0 && cell.getDaysSinceLastHarvest() <= withinDays) {
+                selectedCellIds.add(cell.getId());
+            }
+        }
+        notifySelectionChanged();
+        invalidate();
+    }
+
+    public void selectNeverHarvested() {
+        if (zone == null) return;
+        isMultiSelectMode = true;
+        selectedCellIds.clear();
+        for (Cell cell : zone.getCells()) {
+            if (cell.getStatus() != CellStatus.DISABLED && cell.getStatus() != CellStatus.EMPTY) {
+                if (cell.getLastHarvested() <= 0) {
+                    selectedCellIds.add(cell.getId());
+                }
+            }
+        }
+        notifySelectionChanged();
+        invalidate();
     }
 
     public void zoomIn() {
@@ -328,8 +517,9 @@ public class FarmGridView extends View {
                 cellBackgroundPaint.setColor(status.getBackgroundColor());
                 canvas.drawRoundRect(cellRect, cornerRadius, cornerRadius, cellBackgroundPaint);
 
-                // Draw border
+                // Draw selection tint overlay & border
                 if (isSelected) {
+                    canvas.drawRoundRect(cellRect, cornerRadius, cornerRadius, selectedOverlayPaint);
                     canvas.drawRoundRect(cellRect, cornerRadius, cornerRadius, selectedBorderPaint);
                 } else {
                     cellBorderPaint.setColor(status.getBorderColor());
@@ -354,17 +544,39 @@ public class FarmGridView extends View {
                 statusDotPaint.setColor(status.getPrimaryColor());
                 canvas.drawCircle(cellRect.centerX(), top + 60f, 10f, statusDotPaint);
 
-                // Draw Status text or Crop Short label
-                if (status == CellStatus.EMPTY) {
-                    cellSubtitlePaint.setColor(Color.parseColor("#9E9E9E"));
-                    canvas.drawText("Trống", cellRect.centerX(), bottom - 20f, cellSubtitlePaint);
-                } else if (cell.getPlantType() != null && !cell.getPlantType().isEmpty()) {
-                    String shortCrop = cell.getPlantType();
-                    if (shortCrop.length() > 8) {
-                        shortCrop = shortCrop.substring(0, 7) + "…";
+                // Draw Status text or Crop Short label or Harvest cycle text
+                if (showHarvestInfo) {
+                    int cycle = zone != null ? zone.getHarvestCycleDays() : 30;
+                    if (status == CellStatus.EMPTY) {
+                        cellSubtitlePaint.setColor(Color.parseColor("#9E9E9E"));
+                        canvas.drawText("Trống", cellRect.centerX(), bottom - 20f, cellSubtitlePaint);
+                    } else if (cell.getLastHarvested() > 0) {
+                        int days = cell.getDaysSinceLastHarvest();
+                        if (days >= cycle) {
+                            cellSubtitlePaint.setColor(Color.parseColor("#D32F2F")); // Red: Đến kỳ thu hoạch!
+                            cellSubtitlePaint.setFakeBoldText(true);
+                            canvas.drawText(days + "d • Đến kỳ", cellRect.centerX(), bottom - 20f, cellSubtitlePaint);
+                            cellSubtitlePaint.setFakeBoldText(false);
+                        } else {
+                            cellSubtitlePaint.setColor(Color.parseColor("#0288D1")); // Blue: Đang nuôi trái
+                            canvas.drawText("Đã thu " + days + "d", cellRect.centerX(), bottom - 20f, cellSubtitlePaint);
+                        }
+                    } else {
+                        cellSubtitlePaint.setColor(Color.parseColor("#78909C"));
+                        canvas.drawText("Chưa thu", cellRect.centerX(), bottom - 20f, cellSubtitlePaint);
                     }
-                    cellSubtitlePaint.setColor(status.getPrimaryColor());
-                    canvas.drawText(shortCrop, cellRect.centerX(), bottom - 20f, cellSubtitlePaint);
+                } else {
+                    if (status == CellStatus.EMPTY) {
+                        cellSubtitlePaint.setColor(Color.parseColor("#9E9E9E"));
+                        canvas.drawText("Trống", cellRect.centerX(), bottom - 20f, cellSubtitlePaint);
+                    } else if (cell.getPlantType() != null && !cell.getPlantType().isEmpty()) {
+                        String shortCrop = cell.getPlantType();
+                        if (shortCrop.length() > 8) {
+                            shortCrop = shortCrop.substring(0, 7) + "…";
+                        }
+                        cellSubtitlePaint.setColor(status.getPrimaryColor());
+                        canvas.drawText(shortCrop, cellRect.centerX(), bottom - 20f, cellSubtitlePaint);
+                    }
                 }
 
                 // Selection checkmark or badge
@@ -402,11 +614,34 @@ public class FarmGridView extends View {
                 lastTouchX = x;
                 lastTouchY = y;
                 activePointerId = event.getPointerId(0);
+
+                if (isBrushMode && isMultiSelectMode && event.getPointerCount() == 1) {
+                    Cell cell = getCellAt(x, y);
+                    if (cell != null) {
+                        if (selectedCellIds.add(cell.getId())) {
+                            notifySelectionChanged();
+                            invalidate();
+                        }
+                    }
+                }
                 break;
             }
 
             case MotionEvent.ACTION_MOVE: {
-                if (!scaleGestureDetector.isInProgress()) {
+                if (isBrushMode && isMultiSelectMode && event.getPointerCount() == 1) {
+                    final int pointerIndex = event.findPointerIndex(activePointerId);
+                    if (pointerIndex != -1) {
+                        final float x = event.getX(pointerIndex);
+                        final float y = event.getY(pointerIndex);
+                        Cell cell = getCellAt(x, y);
+                        if (cell != null) {
+                            if (selectedCellIds.add(cell.getId())) {
+                                notifySelectionChanged();
+                                invalidate();
+                            }
+                        }
+                    }
+                } else if (!scaleGestureDetector.isInProgress()) {
                     final int pointerIndex = event.findPointerIndex(activePointerId);
                     if (pointerIndex != -1) {
                         final float x = event.getX(pointerIndex);
@@ -481,7 +716,7 @@ public class FarmGridView extends View {
             if (tapX >= 0 && tapX < headerSize && tapY >= headerSize) {
                 int clickedRow = (int) ((tapY - headerSize) / (baseCellSize + cellMargin));
                 if (clickedRow >= 0 && clickedRow < zone.getRows()) {
-                    selectRow(clickedRow);
+                    toggleSelectRow(clickedRow);
                     return true;
                 }
             }
@@ -490,7 +725,7 @@ public class FarmGridView extends View {
             if (tapY >= 0 && tapY < headerSize && tapX >= headerSize) {
                 int clickedCol = (int) ((tapX - headerSize) / (baseCellSize + cellMargin));
                 if (clickedCol >= 0 && clickedCol < zone.getCols()) {
-                    selectColumn(clickedCol);
+                    toggleSelectColumn(clickedCol);
                     return true;
                 }
             }
@@ -506,35 +741,16 @@ public class FarmGridView extends View {
             }
 
             // Check if tapped on a Cell
-            if (tapX >= headerSize && tapY >= headerSize) {
-                int col = (int) ((tapX - headerSize) / (baseCellSize + cellMargin));
-                int row = (int) ((tapY - headerSize) / (baseCellSize + cellMargin));
-
-                if (row >= 0 && row < zone.getRows() && col >= 0 && col < zone.getCols()) {
-                    Cell cell = zone.getCell(row, col);
-                    if (cell != null) {
-                        if (isMultiSelectMode) {
-                            if (selectedCellIds.contains(cell.getId())) {
-                                selectedCellIds.remove(cell.getId());
-                            } else {
-                                selectedCellIds.add(cell.getId());
-                            }
-                            notifySelectionChanged();
-                            invalidate();
-                        } else {
-                            // If in normal mode, select this single cell and trigger listener
-                            selectedCellIds.clear();
-                            selectedCellIds.add(cell.getId());
-                            notifySelectionChanged();
-                            invalidate();
-
-                            if (cellClickListener != null) {
-                                cellClickListener.onCellClick(cell);
-                            }
-                        }
-                        return true;
+            Cell cell = getCellAt(e.getX(), e.getY());
+            if (cell != null) {
+                if (isMultiSelectMode) {
+                    toggleCellSelection(cell);
+                } else {
+                    if (cellClickListener != null) {
+                        cellClickListener.onCellClick(cell);
                     }
                 }
+                return true;
             }
 
             return super.onSingleTapUp(e);
@@ -544,21 +760,11 @@ public class FarmGridView extends View {
         public void onLongPress(MotionEvent e) {
             // Long press toggles multi-select mode
             isMultiSelectMode = true;
-
-            float tapX = (e.getX() - posX) / scaleFactor;
-            float tapY = (e.getY() - posY) / scaleFactor;
-
-            if (tapX >= headerSize && tapY >= headerSize && zone != null) {
-                int col = (int) ((tapX - headerSize) / (baseCellSize + cellMargin));
-                int row = (int) ((tapY - headerSize) / (baseCellSize + cellMargin));
-                if (row >= 0 && row < zone.getRows() && col >= 0 && col < zone.getCols()) {
-                    Cell cell = zone.getCell(row, col);
-                    if (cell != null) {
-                        selectedCellIds.add(cell.getId());
-                        notifySelectionChanged();
-                        invalidate();
-                    }
-                }
+            Cell cell = getCellAt(e.getX(), e.getY());
+            if (cell != null) {
+                selectedCellIds.add(cell.getId());
+                notifySelectionChanged();
+                invalidate();
             }
         }
     }

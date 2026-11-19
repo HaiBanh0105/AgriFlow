@@ -5,6 +5,7 @@ public enum ActionType {
     FERTILIZE("Bón phân", "🌾", "#F57C00"),
     PESTICIDE("Phun thuốc", "🛡️", "#D32F2F"),
     HARVEST("Thu hoạch", "✂️", "#388E3C"),
+    PLANT("Gieo trồng", "🌱", "#2E7D32"),
     PRUNE("Tỉa cành", "🌿", "#689F38"),
     INSPECT("Kiểm tra", "🔍", "#7B1FA2"),
     NOTE("Ghi chú", "📝", "#607D8B");

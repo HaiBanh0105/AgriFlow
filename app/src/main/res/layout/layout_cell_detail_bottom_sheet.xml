@@ -47,6 +47,15 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 tools:text="Trạng thái: Khỏe mạnh" />
+
+            <TextView
+                android:id="@+id/tv_sheet_harvest_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/action_water"
+                android:textSize="12sp"
+                tools:text="✂️ Thu hoạch gần nhất: 5 ngày trước" />
         </LinearLayout>
 
         <ImageButton
