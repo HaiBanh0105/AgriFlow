@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">FarmGrid</string>
+    <string name="dashboard_greeting">Xin chào, Nhà Nông 🌱</string>
+    <string name="dashboard_subtitle">Theo dõi &amp; quản lý nông nghiệp theo mô hình lưới</string>
+
+    <string name="stat_total_zones">Khu vườn</string>
+    <string name="stat_total_plants">Cây canh tác</string>
+    <string name="stat_healthy_rate">Tỷ lệ khỏe mạnh</string>
+    <string name="stat_need_attention">Cần xử lý</string>
+
+    <string name="title_zones_list">Danh sách khu vực canh tác</string>
+    <string name="btn_add_zone">Thêm khu mới</string>
+    <string name="btn_open_grid">Mở sơ đồ lưới</string>
+
+    <string name="status_healthy">Khỏe mạnh</string>
+    <string name="status_warning">Cần chăm sóc</string>
+    <string name="status_diseased">Sâu bệnh</string>
+    <string name="status_empty">Ô trống</string>
+    <string name="status_disabled">Lối đi / Ẩn</string>
+
+    <string name="bulk_selected">Đã chọn %d ô</string>
+    <string name="action_water">Tưới nước</string>
+    <string name="action_fertilize">Bón phân</string>
+    <string name="action_pesticide">Phun thuốc</string>
+    <string name="action_harvest">Thu hoạch</string>
+    <string name="action_change_status">Đổi trạng thái</string>
+</resources>

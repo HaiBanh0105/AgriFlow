@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_pill_badge" />
+
+    <!-- Header Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_sheet_coord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="Hàng 3 • Cột C (C3)" />
+
+            <TextView
+                android:id="@+id/tv_sheet_status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/status_healthy"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="Trạng thái: Khỏe mạnh" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_close_sheet"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Đóng"
+            android:src="@drawable/ic_close"
+            app:tint="@color/colorOnSurfaceVariant" />
+    </LinearLayout>
+
+    <!-- Health Status Selector Chips -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Cập nhật trạng thái sức khỏe"
+        android:textColor="@color/colorOnSurfaceVariant"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_healthy"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🟢 Khỏe mạnh" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_warning"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🟡 Cần chăm sóc" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_diseased"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔴 Sâu bệnh" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_empty"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚪ Ô trống" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_disabled"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⬛ Lối đi" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- Crop & Notes Inputs -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Giống cây trồng">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_crop_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Ghi chú theo dõi">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_cell_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:maxLines="3" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Quick Care Actions Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Ghi nhận hoạt động chăm sóc nhanh"
+        android:textColor="@color/colorOnSurfaceVariant"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- 4 Quick Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_action_water"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:text="Tưới"
+            android:textColor="@color/action_water"
+            app:icon="@drawable/ic_water"
+            app:iconGravity="textStart"
+            app:iconTint="@color/action_water" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_action_fertilize"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:text="Bón phân"
+            android:textColor="@color/action_fertilize"
+            app:icon="@drawable/ic_fertilizer"
+            app:iconGravity="textStart"
+            app:iconTint="@color/action_fertilize" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_action_pesticide"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:text="Thuốc"
+            android:textColor="@color/action_pesticide"
+            app:icon="@drawable/ic_bug"
+            app:iconGravity="textStart"
+            app:iconTint="@color/action_pesticide" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_action_harvest"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="Thu hoạch"
+            android:textColor="@color/action_harvest"
+            app:icon="@drawable/ic_harvest"
+            app:iconGravity="textStart"
+            app:iconTint="@color/action_harvest" />
+
+    </LinearLayout>
+
+    <!-- Care Log Timeline -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Lịch sử chăm sóc"
+        android:textColor="@color/colorOnSurfaceVariant"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_care_logs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:maxHeight="160dp"
+        android:nestedScrollingEnabled="true"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_care_log" />
+
+    <!-- Save Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_save_cell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:padding="12dp"
+        android:text="Lưu thông tin ô"
+        android:textColor="@color/colorOnPrimary" />
+
+</LinearLayout>

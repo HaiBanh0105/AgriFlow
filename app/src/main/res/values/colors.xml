@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Brand Green Theme -->
+    <color name="colorPrimary">#2E7D32</color>
+    <color name="colorPrimaryDark">#1B5E20</color>
+    <color name="colorPrimaryContainer">#E8F5E9</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnPrimaryContainer">#1B5E20</color>
+
+    <!-- Secondary / Accent -->
+    <color name="colorSecondary">#FF8F00</color>
+    <color name="colorSecondaryContainer">#FFF8E1</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+
+    <!-- Surfaces & Backgrounds -->
+    <color name="colorBackground">#F8FAF8</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurfaceVariant">#EEF2EE</color>
+    <color name="colorOnSurface">#1C1D1B</color>
+    <color name="colorOnSurfaceVariant">#5F6368</color>
+    <color name="dividerColor">#E0E5E0</color>
+
+    <!-- Agricultural Status Colors -->
+    <color name="status_healthy">#2E7D32</color>
+    <color name="status_healthy_bg">#E8F5E9</color>
+    <color name="status_warning">#EF6C00</color>
+    <color name="status_warning_bg">#FFF3E0</color>
+    <color name="status_diseased">#C62828</color>
+    <color name="status_diseased_bg">#FFEBEE</color>
+    <color name="status_empty">#757575</color>
+    <color name="status_empty_bg">#F5F5F5</color>
+    <color name="status_disabled">#546E7A</color>
+    <color name="status_disabled_bg">#ECEFF1</color>
+
+    <!-- Quick Action Colors -->
+    <color name="action_water">#0288D1</color>
+    <color name="action_fertilize">#F57C00</color>
+    <color name="action_pesticide">#D32F2F</color>
+    <color name="action_harvest">#388E3C</color>
+</resources>
